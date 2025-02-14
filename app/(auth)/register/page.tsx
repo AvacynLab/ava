@@ -5,11 +5,16 @@ import { useRouter } from "next/navigation"
 import { useActionState, useEffect, useState } from "react"
 import { toast } from "sonner"
 import { motion } from "framer-motion"
+import { ArrowUpRightIcon } from 'lucide-react'
 
 import { AuthForm } from "@/components/auth-form"
-import BackgroundPaths from "@/components/ui/background-paths"
+import { Squares } from "@/components/ui/squares-background"
 import { ShineBorder } from "@/components/ui/shine-border"
 import ScrambledTitle from "@/components/ui/flickering-letter"
+import AvacynLogo from "@/components/avacyn-logo"
+import { Announcement, AnnouncementTag, AnnouncementTitle } from "@/components/ui/announcement"
+import { MagneticSocialLinks } from "@/components/magnetic-social-links"
+// import { TermsConditionsDialog } from "@/components/terms-conditions-dialog"
 
 import { register, type RegisterActionState } from "../actions"
 
@@ -43,11 +48,32 @@ export default function Page() {
 
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
-      <BackgroundPaths />
+      <Squares
+        direction="diagonal"
+        speed={0.5}
+        squareSize={40}
+        borderColor="rgba(255, 255, 255, 0.1)"
+        hoverFillColor="#222"
+        className="absolute inset-0 z-0"
+      />
+
+      <div className="absolute top-4 left-4 z-20">
+        <AvacynLogo />
+      </div>
+
+      <div className="absolute top-4 right-4 z-20">
+        <Announcement>
+          <AnnouncementTag>Nouveau</AnnouncementTag>
+          <AnnouncementTitle>
+            Découvrez nos nouvelles fonctionnalités
+            <ArrowUpRightIcon size={16} className="shrink-0 text-muted-foreground" />
+          </AnnouncementTitle>
+        </Announcement>
+      </div>
 
       <div className="relative z-10 flex min-h-screen items-center justify-center">
         <ShineBorder
-          className="absolute w-[442px] bg-background"
+          className="absolute w-[442px]"
           color={["#4285F4", "#34A853", "#FBBC05", "#EA4335"]}
           borderWidth={1}
           duration={14}
@@ -59,7 +85,7 @@ export default function Page() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-full px-6 py-8"
+            className="w-full px-6 py-8 bg-background"
           >
             <div className="flex flex-col gap-12">
               <div className="flex flex-col items-center justify-center gap-2 px-4 text-center sm:px-16">
@@ -94,6 +120,11 @@ export default function Page() {
             </div>
           </motion.div>
         </ShineBorder>
+      </div>
+
+      <div className="absolute bottom-4 right-4 z-20 flex items-center space-x-4">
+        {/* <TermsConditionsDialog /> */}
+        <MagneticSocialLinks />
       </div>
     </div>
   )

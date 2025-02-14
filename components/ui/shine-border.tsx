@@ -13,7 +13,7 @@ interface ShineBorderProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "c
   className?: string
   children: React.ReactNode
   alwaysAnimate?: boolean
-  passThrough?: boolean // Nouvelle prop
+  passThrough?: boolean
 }
 
 export function ShineBorder({
@@ -24,7 +24,7 @@ export function ShineBorder({
   className,
   children,
   alwaysAnimate = false,
-  passThrough = false, // Nouvelle prop avec false comme valeur par défaut
+  passThrough = false,
   ...props
 }: ShineBorderProps) {
   return (
@@ -53,7 +53,7 @@ export function ShineBorder({
         "before:[background-size:300%_300%]",
         "before:[mask:--mask-linear-gradient]",
         alwaysAnimate ? "motion-safe:before:animate-shine" : "motion-safe:hover:before:animate-shine",
-        passThrough && "pointer-events-none", // Ajoutez cette classe conditionnellement
+        passThrough && "pointer-events-none",
         className,
       )}
       {...props}
