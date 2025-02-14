@@ -7,6 +7,9 @@ import postgres from 'postgres';
 
 import {
   user,
+  accounts,
+  session,
+  verificationToken,
   chat,
   type User,
   document,
@@ -24,9 +27,10 @@ import { ArtifactKind } from '@/components/artifact';
 
 // biome-ignore lint: Forbidden non-null assertion.
 const client = postgres(process.env.POSTGRES_URL!);
-const db = drizzle(client);
+export const db = drizzle(client);
 
-export async function getUser(email: string): Promise<Array<User>> {
+// User-related functions
+export async function getUser(email: string): Promise<User[]> {
   try {
     return await db.select().from(user).where(eq(user.email, email));
   } catch (error) {
@@ -35,14 +39,175 @@ export async function getUser(email: string): Promise<Array<User>> {
   }
 }
 
-export async function createUser(email: string, password: string) {
-  const salt = genSaltSync(10);
-  const hash = hashSync(password, salt);
-
+export async function createUser(email: string, password?: string) {
   try {
-    return await db.insert(user).values({ email, password: hash });
+    const userData: { email: string } & Partial<{
+      id?: string;
+      name?: string | null;
+      password?: string | null;
+      image?: string | null;
+      emailVerified?: Date | null;
+    }> = { email };
+    
+    if (password) {
+      const salt = genSaltSync(10);
+      userData.password = hashSync(password, salt);
+    }
+    
+    const result = await db.insert(user).values(userData).returning();
+    return result[0];
   } catch (error) {
     console.error('Failed to create user in database');
+    throw error;
+  }
+}
+
+export async function updateUser(id: string, data: Partial<typeof user.$inferInsert>) {
+  try {
+    return await db.update(user).set(data).where(eq(user.id, id)).returning();
+  } catch (error) {
+    console.error('Failed to update user in database');
+    throw error;
+  }
+}
+
+export async function getUserByEmail(email: string): Promise<User | undefined> {
+  try {
+    const usersData = await db.select().from(user).where(eq(user.email, email));
+    return usersData[0];
+  } catch (error) {
+    console.error('Failed to get user by email from database');
+    throw error;
+  }
+}
+
+// Account-related functions
+export async function getAccount(providerId: string, providerAccountId: string) {
+  try {
+    return await db
+      .select()
+      .from(accounts)
+      .where(
+        and(
+          eq(accounts.provider, providerId),
+          eq(accounts.providerAccountId, providerAccountId)
+        )
+      );
+  } catch (error) {
+    console.error('Failed to get account from database');
+    throw error;
+  }
+}
+
+export async function createAccount(data: typeof accounts.$inferInsert) {
+  try {
+    return await db.insert(accounts).values(data);
+  } catch (error) {
+    console.error('Failed to create account in database');
+    throw error;
+  }
+}
+
+export async function deleteAccount(providerId: string, providerAccountId: string) {
+  try {
+    return await db
+      .delete(accounts)
+      .where(
+        and(
+          eq(accounts.provider, providerId),
+          eq(accounts.providerAccountId, providerAccountId)
+        )
+      );
+  } catch (error) {
+    console.error('Failed to delete account from database');
+    throw error;
+  }
+}
+
+// Session-related functions
+export async function getSession(sessionToken: string) {
+  try {
+    return await db
+      .select()
+      .from(session)
+      .where(eq(session.sessionToken, sessionToken));
+  } catch (error) {
+    console.error('Failed to get session from database');
+    throw error;
+  }
+}
+
+export async function createSession(data: typeof session.$inferInsert) {
+  try {
+    return await db.insert(session).values(data);
+  } catch (error) {
+    console.error('Failed to create session in database');
+    throw error;
+  }
+}
+
+export async function updateSession(sessionToken: string, data: Partial<typeof session.$inferInsert>) {
+  try {
+    return await db
+      .update(session)
+      .set(data)
+      .where(eq(session.sessionToken, sessionToken));
+  } catch (error) {
+    console.error('Failed to update session in database');
+    throw error;
+  }
+}
+
+export async function deleteSession(sessionToken: string) {
+  try {
+    return await db
+      .delete(session)
+      .where(eq(session.sessionToken, sessionToken));
+  } catch (error) {
+    console.error('Failed to delete session from database');
+    throw error;
+  }
+}
+
+// VerificationToken-related functions
+export async function getVerificationToken(identifier: string, token: string) {
+  try {
+    return await db
+      .select()
+      .from(verificationToken)
+      .where(
+        and(
+          eq(verificationToken.identifier, identifier),
+          eq(verificationToken.token, token)
+        )
+      );
+  } catch (error) {
+    console.error('Failed to get verification token from database');
+    throw error;
+  }
+}
+
+export async function createVerificationToken(data: typeof verificationToken.$inferInsert) {
+  try {
+    return await db.insert(verificationToken).values(data);
+  } catch (error) {
+    console.error('Failed to create verification token in database');
+    throw error;
+  }
+}
+
+export async function deleteVerificationToken(identifier: string, token: string) {
+  try {
+    return await db
+      .delete(verificationToken)
+      .where(
+        and(
+          eq(verificationToken.identifier, identifier),
+          eq(verificationToken.token, token)
+        )
+      );
+  } catch (error) {
+    console.error('Failed to delete verification token from database');
     throw error;
   }
 }
