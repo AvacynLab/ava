@@ -25,6 +25,18 @@ import { createDocument } from '@/lib/ai/tools/create-document';
 import { updateDocument } from '@/lib/ai/tools/update-document';
 import { requestSuggestions } from '@/lib/ai/tools/request-suggestions';
 import { getWeather } from '@/lib/ai/tools/get-weather';
+import { web_search } from '@/lib/ai/tools/web-search';
+import { x_search } from '@/lib/ai/tools/x-search';
+import { tmdb_search } from '@/lib/ai/tools/tmdb-search';
+import { trending_movies } from '@/lib/ai/tools/trending-movies';
+import { trending_tv } from '@/lib/ai/tools/trending-tv';
+import { academic_search } from '@/lib/ai/tools/academic-search';
+import { youtube_search } from '@/lib/ai/tools/youtube-search';
+import { scrape_web } from '@/lib/ai/tools/scrape-web';
+import { find_place } from '@/lib/ai/tools/find-place';
+import { text_search } from '@/lib/ai/tools/text-search';
+import { nearby_search } from '@/lib/ai/tools/nearby-search';
+import { track_flight } from '@/lib/ai/tools/track-flight';
 
 export const maxDuration = 60;
 
@@ -74,6 +86,18 @@ export async function POST(request: Request) {
                 'createDocument',
                 'updateDocument',
                 'requestSuggestions',
+                'web_search', //Vérifié
+                'x_search', //Vérifié
+                'tmdb_search', //Vérifié
+                'trending_movies', //Vérifié
+                'trending_tv', //Vérifié
+                'academic_search', //Vérifié
+                'youtube_search', //Vérifié
+                'scrape_web', //Vérifié
+                'find_place', //Vérifié
+                'text_search', //Vérifié
+                'nearby_search', //Vérifié
+                'track_flight', //Vérifié
               ],
         experimental_transform: smoothStream({ chunking: 'word' }),
         experimental_generateMessageId: generateUUID,
@@ -85,6 +109,18 @@ export async function POST(request: Request) {
             session,
             dataStream,
           }),
+          web_search: web_search({ dataStream }),
+          x_search: x_search({ dataStream }),
+          tmdb_search: tmdb_search({ dataStream }),
+          trending_movies: trending_movies({ dataStream }),
+          trending_tv: trending_tv({ dataStream }),
+          academic_search: academic_search({ dataStream }),
+          youtube_search: youtube_search({ dataStream }),
+          scrape_web: scrape_web({ dataStream }),
+          find_place: find_place({ dataStream }),
+          text_search: text_search({ dataStream }),
+          nearby_search: nearby_search({ dataStream }),
+          track_flight: track_flight({ dataStream }),
         },
         onFinish: async ({ response, reasoning }) => {
           if (session.user?.id) {
