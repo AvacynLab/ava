@@ -14,7 +14,7 @@ import TrendingResults from './tools/trending-tv-movies-results';
 import FindPlaceResult from "@/components/tools/find-place-result";
 import YouTubeSearchResult from "@/components/tools/youtube-search";
 import ScrapeWebResult from "@/components/tools/scrape-web";
-import TranslationTool from "@/components/tools/translation";
+// import TranslationTool from "@/components/tools/translation";
 import XSearchResult from "@/components/tools/x-search";
 import AcademicSearchResult from "@/components/tools/academic-search";
 import { MapContainer } from './tools/map-components';
@@ -340,12 +340,12 @@ const ToolInvocationListView = memo(
                   <DocumentToolResult type="request-suggestions" result={result} isReadonly={isReadonly} />
                 </div>
               );
-            case "text_translate":
-              return (
-                <div key={toolCallId} className="my-4">
-                  <TranslationTool toolInvocation={toolInvocation} result={result} />
-                </div>
-              );
+            // case "text_translate":
+            //   return (
+            //     <div key={toolCallId} className="my-4">
+            //       <TranslationTool toolInvocation={toolInvocation} result={result} />
+            //     </div>
+            //   );
             default:
               return (
                 <div key={toolCallId} className="p-4 bg-neutral-100 dark:bg-neutral-800 rounded-lg">

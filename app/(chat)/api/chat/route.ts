@@ -83,21 +83,22 @@ export async function POST(request: Request) {
                 'createDocument',
                 'updateDocument',
                 'requestSuggestions',
-                // 'web_search', //Vérifié
-                // 'x_search', //Vérifié
-                // 'tmdb_search', //Vérifié
-                // 'trending_movies', //Vérifié
-                // 'trending_tv', //Vérifié
-                // 'academic_search', //Vérifié
-                // 'youtube_search', //Vérifié
-                // 'scrape_web', //Vérifié
-                // 'find_place', //Vérifié
-                // 'text_search', //Vérifié
-                // 'nearby_search', //Vérifié
-                // 'track_flight', //Vérifié
+                'web_search', //Vérifié
+                'x_search', //Vérifié
+                'tmdb_search', //Vérifié
+                'trending_movies', //Vérifié
+                'trending_tv', //Vérifié
+                'academic_search', //Vérifié
+                'youtube_search', //Vérifié
+                'scrape_web', //Vérifié
+                'find_place', //Vérifié
+                'text_search', //Vérifié
+                'nearby_search', //Vérifié
+                'track_flight', //Vérifié
               ],
         experimental_transform: smoothStream({ chunking: 'word' }),
         experimental_generateMessageId: generateUUID,
+        
         tools: {
           getWeather,
           createDocument: createDocument({ session, dataStream }),
